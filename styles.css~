@@ -1,0 +1,14 @@
+.lightNavbar {
+    "navbar navbar-light bg-light"
+}
+
+.darkNavbar {
+    "navbar navbar-dark bg-dark"
+}
+
+.lightButton {
+}
+
+.darkButton {
+	    "btn btn-primary"
+}
