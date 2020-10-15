@@ -8,7 +8,9 @@
     <title>Jackson Harmon</title>
   </head>
   <body>
+
     <div id="app">
+
       <nav :class="['navbar', lightMode ? 'navbar-light bg-light' : 'navbar-dark bg-dark']">
 	<a class="navbar-brand" href="#">Jackson Harmon</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,11 +31,13 @@
 	    <li class="nav-item">
               <a class="nav-link" href="#contact" @click="page = 'contact'">Contact</a>
 	    </li>
+	    <li class="nav-item">
+              <a class="nav-link" href="#blog" @click="page = 'blog'">Blog</a>
+	    </li>
 	  </ul>
 	</div>
       </nav>
 
-      <h1> Work in Progress </h1>
       <div v-show="page == 'home'">
 	<home> </home>
       </div>
@@ -50,15 +54,17 @@
 	<contact> </contact>
       </div>
 
-      
+      <div v-show="page == 'blog'">
+	<blog> </blog>
+      </div>      
 
       <button :class="['btn btn-primary active', lightMode ? 'btn-light' : 'btn-dark']"
 	      @click="switchColorTheme"
 	      style="position: fixed; bottom: 10px; right: 10px;">
 	{{ lightMode ? 'Dark Mode' : 'Light Mode' }}
       </button>
-
     </div>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
@@ -66,4 +72,5 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="main.js"></script>
   </body>
+
 </html>
