@@ -175,7 +175,7 @@ Vue.component('projects', {
                    <h1 class="display4"> Video Games </h1>
                    <hr class="my-4">
                    <p class="lead"> Dates: 2012-2013 </p>
-                   <p class="lead"> Github: To be uploaded </p>
+                   <p class="lead"> Download link: https://drive.google.com/drive/folders/0B5Ga8Lu2vLsCOXJxa2czRm5oQms?usp=sharing </p>
                    <p>
                      These include my earliest programming projects. Several of these
                      were school projects and other were done in my free time. They 
