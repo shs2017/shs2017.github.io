@@ -8,10 +8,7 @@ Vue.component('home', {
                                    My course specializations have are in CS theory and artificial intelligence. I
                                    expect to graduate in the Spring of 2021. I began programming when I was around
                                    12 or 13 and have created projects in various areas from data science to low-level
-                                   programming. You can find some of them on the projects page. I also have a page 
-                                   detailing some concepts and algorithms I find interesting on the blog portion of
-                                   the website. If you're interested in more information I've uploaded my resume
-                                   and contact information on their resp. pages.
+                                   programming. You can find some of them on the projects page.
                                    </p>
                  </div>
                </div>`,
@@ -253,7 +250,7 @@ var app = new Vue({
     el: '#app',
     data: {
 	lightMode: true,
-	page: 'home',
+	page: 'projects',
     },
     methods: {
 	switchColorTheme: function () {
