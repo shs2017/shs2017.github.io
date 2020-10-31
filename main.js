@@ -58,6 +58,22 @@ Vue.component('projects', {
                  </div>
 
                  <div class="jumbotron">
+                   <h1 class="display4"> Fraternity Chapter Website </h1>
+                   <p class="lead"> Dates: 2017-2018 </p>
+
+                   <p class="lead"> Website: 
+                     <a href="https://www.gtphipsi.com/"> https://www.gtphipsi.com/ </a>
+                   </p>
+
+                   <hr class="my-4">
+                   </p>
+                     I helped lead the development of my local fraternity's website. We used a combination of tools ranging from bootstrap and react
+                     to PHP, during this time. The main goal was to develop a responsive website that would help attract new recruits as well as provide them with
+                     information about our rush schedule. This proved to be very valuable, as we have increased our recruits in recent years.
+                   </p>
+                 </div>
+
+                 <div class="jumbotron">
                    <h1 class="display4"> Reconfigurable Computer </h1>
                    <p class="lead"> Dates: 2013-2014 </p>
                    <p class="lead">
