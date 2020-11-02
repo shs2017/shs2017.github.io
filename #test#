@@ -1,0 +1,2 @@
+                   <h6 v-if="featured" class="card-subtitle mb-2 text-muted">
+                   </h6>
