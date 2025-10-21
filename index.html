@@ -1,68 +1,829 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jackson Harmon - Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0"></script>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+    const tf = window.tf;
 
-    <title>Jackson Harmon</title>
-  </head>
-  <body>
+    // ============================================================================
+    // DATA SECTION - Edit your information here
+    // ============================================================================
 
-    <div id="app">
+    const PROFILE = {
+      name: "Jackson Harmon",
+      bio: "I'm a machine learning master's student at University of Tübingen, interested in developing the next generation of machine learning models. Feel free to reach out if you are interested in collaborating or chatting.",
+      email: "jackson.harmon@student.uni-tuebingen.de",
+      github: "https://github.com/shs2017",
+      emacsConfig: "https://github.com/shs2017/EmacsConfig",
+      resume: "#resume"
+    };
 
-      <nav :class="['navbar', lightMode ? 'navbar-light bg-light' : 'navbar-dark bg-dark']">
-	<a class="navbar-brand" href="#">Jackson Harmon</a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-	  <span class="navbar-toggler-icon"></span>
-	</button>
+    const PAPERS = [
+      {
+        title: "Mapping Post-Training Forgetting in Language Models at Scale",
+        description: "Research quantifying how post-training alters pretrained knowledge in LMs through sample-wise forgetting metrics. Shows domain-continual pretraining induces moderate forgetting, RL/SFT yields moderate-to-large backward transfer on math/logic, and model merging doesn't reliably mitigate forgetting",
+        year: "2025",
+        link: "https://post-forget.github.io/"
+      }
+    ];
 
-	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-	  <ul class="navbar-nav mr-auto">
-	    <li class="nav-item active">
-              <a class="nav-link" href="#" @click="page = 'home'">Home<span class="sr-only">(current)</span></a>
-	    </li>
-	    <li class="nav-item">
-              <a class="nav-link" href="#projects" @click="page = 'projects'">Projects</a>
-	    </li>
-	  </ul>
-	</div>
-      </nav>
+    const EXPERIENCE = [
+      {
+        title: "University of Tübingen - MSc Machine Learning",
+        description: "Master's degree in Machine Learning, focusing on developing next-generation ML models",
+        startYear: "2023",
+        endYear: "present",
+        year: "2023",
+        category: "",
+        link: "#masters"
+      },
+      {
+        title: "NCR",
+        description: "Code-owner of Java and Go microservices used across companies worldwide. Led inter-team and customer-facing weekly meetings",
+        startYear: "2021",
+        endYear: "2023",
+        year: "2023",
+        category: "Software Engineer",
+        link: "#ncr"
+      },
+      {
+        title: "Georgia Institute of Technology - BSc Computer Science",
+        description: "Bachelor's degree specializing in Machine Learning and Theory",
+        startYear: "2017",
+        endYear: "2021",
+        year: "2021",
+        category: "Highest Honors",
+        link: "#gatech"
+      },
+      {
+        title: "Ludwig Maximilian University of Munich",
+        description: "Computer Science studies",
+        startYear: "2019",
+        endYear: "2020",
+        year: "2019",
+        category: "Study Abroad",
+        link: "#lmu"
+      },
+      {
+        title: "Hawque",
+        description: "Developed dual login facial recognition system and collaborative filtering algorithm. Worked with remote international team",
+        startYear: "2018",
+        endYear: "2018",
+        year: "2018",
+        category: "Data Scientist Intern",
+        link: "https://www.hawque.com/"
+      },
+      {
+        title: "Perceptive Solutions",
+        description: "Built framework for modeling magnet interactions and data extrapolation/visualization program",
+        startYear: "2016",
+        endYear: "2016",
+        year: "2016",
+        category: "Intern",
+        link: "#perceptive"
+      }
+    ];
 
-      <div v-show="page == 'home'">
-	<home> </home>
-      </div>
+    const PROJECTS = [
+      {
+        title: "ML Models & Algorithms Implementation",
+        description: "On-going collection of machine learning models and algorithms implemented from scratch for learning and reference",
+        year: "2024",
+        link: "https://github.com/shs2017/ML"
+      },
+      {
+        title: "Physics-Informed Machine Learning",
+        description: "Course project exploring physics-informed neural networks and their applications to solving differential equations",
+        year: "2024",
+        link: "https://github.com/shs2017/physics-informed-machine-learning"
+      },
+      {
+        title: "Petri Dish Colony Counter",
+        description: "Combined CNN with KMeans and boosting to predict colony count on petri dishes. Developed image generator and preprocessor for training",
+        year: "2020",
+        link: "https://tang111111.github.io/ColonyCountingML/"
+      },
+      {
+        title: "Fraternity Website Development",
+        description: "Led development of responsive website using Bootstrap, React, and PHP to attract new recruits and showcase rush information",
+        year: "2018",
+        link: "https://www.gtphipsi.com"
+      },
+      {
+        title: "Photo/Video Blemish Remover",
+        description: "Developed facial recognition and blemish detection tool using TensorFlow and OpenCV, deployed as photo filter",
+        year: "2017",
+        link: "#litely"
+      },
+      {
+        title: "Reconfigurable Computer",
+        description: "FPGA-based reconfigurable computer design, featured on Upverter Blog. Open-source hardware project with multiple forks",
+        year: "2014",
+        link: "https://upverter.com/design/shs2017/59aae0b5aaab0e8d/reconfigurable-computer/"
+      },
+      {
+        title: "Hobby Operating System",
+        description: "16-bit to 32-bit operating system with bootloader, command line, and hard drive support. Written in x86 assembly and C",
+        year: "2013",
+        link: "https://github.com/shs2017/HarmonsOS"
+      }
+    ];
 
-      <div v-show="page == 'projects'">
-	<projects> </projects>
-      </div>
+    // ============================================================================
+    // COMPONENT CODE
+    // ============================================================================
 
-      <div v-show="page == 'resume'">
-	<resume> </resume>
-      </div>
+    const MinimalistPortfolio = () => {
+      const canvasRef = useRef(null);
+      const [model, setModel] = useState(null);
+      const [training, setTraining] = useState(false);
+      const [epoch, setEpoch] = useState(0);
+      const [accuracy, setAccuracy] = useState(0);
+      const [currentProblems, setCurrentProblems] = useState([]);
+      const [weights, setWeights] = useState([]);
+      const [currentTime, setCurrentTime] = useState(new Date());
+      const animationRef = useRef(null);
+      const stopTrainingRef = useRef(false);
+      const modelCreated = useRef(false);
 
-      <div v-show="page == 'contact'">
-	<contact> </contact>
-      </div>
+      const architecture = [16, 32, 16, 8];
+      const [nodes, setNodes] = useState([]);
 
-      <div v-show="page == 'blog'">
-	<blog> </blog>
-      </div>      
+      // Group data by year
+      const papersByYear = PAPERS.reduce((acc, paper) => {
+        if (!acc[paper.year]) acc[paper.year] = [];
+        acc[paper.year].push(paper);
+        return acc;
+      }, {});
 
-      <button :class="['btn btn-primary active', lightMode ? 'btn-light' : 'btn-dark']"
-	      @click="switchColorTheme"
-	      style="position: fixed; bottom: 10px; right: 10px;">
-	{{ lightMode ? 'Dark Mode' : 'Light Mode' }}
-      </button>
-    </div>
+      const experienceByYear = EXPERIENCE.reduce((acc, exp) => {
+        if (!acc[exp.year]) acc[exp.year] = [];
+        acc[exp.year].push(exp);
+        return acc;
+      }, {});
 
+      const projectsByYear = PROJECTS.reduce((acc, proj) => {
+        if (!acc[proj.year]) acc[proj.year] = [];
+        acc[proj.year].push(proj);
+        return acc;
+      }, {});
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-    <script src="main.js"></script>
-  </body>
+      const paperYears = Object.keys(papersByYear).sort((a, b) => b - a);
+      const experienceYears = Object.keys(experienceByYear).sort((a, b) => b - a);
+      const projectYears = Object.keys(projectsByYear).sort((a, b) => b - a);
 
+      // Update time every minute
+      useEffect(() => {
+        const timer = setInterval(() => {
+          setCurrentTime(new Date());
+        }, 60000);
+        return () => clearInterval(timer);
+      }, []);
+
+      // Get time-based colors
+      const getTimeBasedTheme = () => {
+        const hour = currentTime.getHours();
+        
+        if (hour >= 5 && hour < 8) {
+          // Sunrise
+          return {
+            name: "Sunrise",
+            bg: "from-orange-100 via-pink-100 to-purple-100",
+            text: "text-gray-900",
+            textSecondary: "text-gray-700",
+            border: "border-gray-300",
+            hoverText: "group-hover:text-orange-600",
+            dot: "bg-orange-400 group-hover:bg-orange-600",
+            line: "bg-orange-200",
+            btn: "border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white",
+            btnSecondary: "border-orange-400 text-orange-700 hover:bg-orange-50",
+            tag: "bg-orange-50 text-orange-600",
+            problemBox: "border-orange-200 bg-orange-50",
+            link: "text-gray-700 hover:text-orange-600",
+            nodeColor: "#ea580c",
+            linkColor: "rgba(234, 88, 12, OPACITY)"
+          };
+        } else if (hour >= 8 && hour < 12) {
+          // Morning
+          return {
+            name: "Morning",
+            bg: "from-blue-50 via-cyan-50 to-teal-50",
+            text: "text-gray-900",
+            textSecondary: "text-gray-700",
+            border: "border-gray-300",
+            hoverText: "group-hover:text-blue-600",
+            dot: "bg-blue-400 group-hover:bg-blue-600",
+            line: "bg-blue-200",
+            btn: "border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white",
+            btnSecondary: "border-blue-400 text-blue-700 hover:bg-blue-50",
+            tag: "bg-blue-50 text-blue-600",
+            problemBox: "border-blue-200 bg-blue-50",
+            link: "text-gray-700 hover:text-blue-600",
+            nodeColor: "#2563eb",
+            linkColor: "rgba(37, 99, 235, OPACITY)"
+          };
+        } else if (hour >= 12 && hour < 17) {
+          // Afternoon
+          return {
+            name: "Afternoon",
+            bg: "from-amber-50 via-yellow-50 to-orange-50",
+            text: "text-gray-900",
+            textSecondary: "text-gray-700",
+            border: "border-gray-300",
+            hoverText: "group-hover:text-amber-600",
+            dot: "bg-amber-400 group-hover:bg-amber-600",
+            line: "bg-amber-200",
+            btn: "border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white",
+            btnSecondary: "border-amber-400 text-amber-700 hover:bg-amber-50",
+            tag: "bg-amber-50 text-amber-600",
+            problemBox: "border-amber-200 bg-amber-50",
+            link: "text-gray-700 hover:text-amber-600",
+            nodeColor: "#d97706",
+            linkColor: "rgba(217, 119, 6, OPACITY)"
+          };
+        } else if (hour >= 17 && hour < 20) {
+          // Evening/Sunset
+          return {
+            name: "Sunset",
+            bg: "from-red-100 via-orange-100 to-pink-100",
+            text: "text-gray-900",
+            textSecondary: "text-gray-700",
+            border: "border-gray-300",
+            hoverText: "group-hover:text-red-600",
+            dot: "bg-red-400 group-hover:bg-red-600",
+            line: "bg-red-200",
+            btn: "border-red-600 text-red-600 hover:bg-red-600 hover:text-white",
+            btnSecondary: "border-red-400 text-red-700 hover:bg-red-50",
+            tag: "bg-red-50 text-red-600",
+            problemBox: "border-red-200 bg-red-50",
+            link: "text-gray-700 hover:text-red-600",
+            nodeColor: "#dc2626",
+            linkColor: "rgba(220, 38, 38, OPACITY)"
+          };
+        } else {
+          // Night
+          return {
+            name: "Night",
+            bg: "from-slate-900 via-blue-900 to-indigo-900",
+            text: "text-gray-100",
+            textSecondary: "text-gray-300",
+            border: "border-gray-700",
+            hoverText: "group-hover:text-gray-400",
+            dot: "bg-blue-400 group-hover:bg-blue-200",
+            line: "bg-gray-700",
+            btn: "border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-gray-900",
+            btnSecondary: "border-gray-600 text-gray-300 hover:bg-gray-800",
+            tag: "bg-gray-800 text-gray-300",
+            problemBox: "border-gray-700 bg-gray-800",
+            link: "text-gray-300 hover:text-white",
+            nodeColor: "#60a5fa",
+            linkColor: "rgba(96, 165, 250, OPACITY)"
+          };
+        }
+      };
+
+      const theme = getTimeBasedTheme();
+      const timeString = currentTime.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      });
+
+      // Initialize node positions
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const width = canvas.width;
+        const height = canvas.height;
+        const newNodes = [];
+
+        architecture.forEach((layerSize, layerIdx) => {
+          const x = (layerIdx / (architecture.length - 1)) * (width - 200) + 100;
+          const layerNodes = [];
+          
+          for (let i = 0; i < layerSize; i++) {
+            const y = ((i + 1) / (layerSize + 1)) * height;
+            layerNodes.push({
+              x: x + (Math.random() - 0.5) * 10,
+              y: y + (Math.random() - 0.5) * 10,
+              vx: (Math.random() - 0.5) * 0.3,
+              vy: (Math.random() - 0.5) * 0.3,
+              targetX: x,
+              targetY: y
+            });
+          }
+          newNodes.push(layerNodes);
+        });
+
+        setNodes(newNodes);
+      }, []);
+
+      // Create model
+      useEffect(() => {
+        if (modelCreated.current) return;
+        
+        const createModel = () => {
+          const newModel = tf.sequential();
+          
+          newModel.add(tf.layers.dense({
+            inputShape: [16],
+            units: 32,
+            activation: 'relu'
+          }));
+          
+          newModel.add(tf.layers.dense({
+            units: 16,
+            activation: 'relu'
+          }));
+          
+          newModel.add(tf.layers.dense({
+            units: 8,
+            activation: 'softmax'
+          }));
+
+          newModel.compile({
+            optimizer: tf.train.adam(0.005),
+            loss: 'categoricalCrossentropy',
+            metrics: ['accuracy']
+          });
+
+          return newModel;
+        };
+
+        modelCreated.current = true;
+        const newModel = createModel();
+        setModel(newModel);
+        
+        const initialWeights = newModel.layers.map(layer => {
+          const weights = layer.getWeights()[0];
+          if (weights) {
+            return weights.arraySync();
+          }
+          return null;
+        }).filter(w => w !== null);
+        
+        setWeights(initialWeights);
+      }, []);
+
+      // Generate modulo 8 multiplication data
+      const generateBatch = (batchSize = 16) => {
+        const inputs = [];
+        const labels = [];
+        const problems = [];
+
+        for (let i = 0; i < batchSize; i++) {
+          const a = Math.floor(Math.random() * 8);
+          const b = Math.floor(Math.random() * 8);
+          const result = (a * b) % 8;
+          
+          const input = new Array(16).fill(0);
+          input[a] = 1;
+          input[8 + b] = 1;
+          
+          inputs.push(input);
+          labels.push(result);
+          problems.push({ a, b, result });
+        }
+
+        return { inputs, labels, problems };
+      };
+
+      // Training loop
+      const trainModel = async () => {
+        if (!model || training) return;
+        
+        await startTraining(model);
+      };
+
+      // Core training function
+      const startTraining = async (trainingModel) => {
+        setTraining(true);
+        stopTrainingRef.current = false;
+
+        for (let e = 0; e < 500; e++) {
+          if (stopTrainingRef.current) {
+            setTraining(false);
+            return;
+          }
+
+          const batch = generateBatch(16);
+          
+          const xs = tf.tensor2d(batch.inputs);
+          const ys = tf.oneHot(batch.labels, 8);
+
+          const history = await trainingModel.fit(xs, ys, {
+            epochs: 1,
+            verbose: 0
+          });
+
+          setEpoch(e + 1);
+          setAccuracy(history.history.acc[0] * 100);
+          setCurrentProblems(batch.problems.slice(0, 8));
+
+          const layerWeights = trainingModel.layers.map(layer => {
+            const weights = layer.getWeights()[0];
+            if (weights) {
+              return weights.arraySync();
+            }
+            return null;
+          }).filter(w => w !== null);
+
+          setWeights(layerWeights);
+
+          xs.dispose();
+          ys.dispose();
+
+          await tf.nextFrame();
+        }
+
+        setTraining(false);
+      };
+
+      // Stop training
+      const stopTraining = () => {
+        stopTrainingRef.current = true;
+        setTraining(false);
+      };
+
+      // Reset and retrain
+      const resetAndTrain = async () => {
+        stopTrainingRef.current = true;
+        setTraining(false);
+        
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        if (model) {
+          model.dispose();
+          await tf.nextFrame();
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
+        const createModel = () => {
+          const newModel = tf.sequential();
+          
+          newModel.add(tf.layers.dense({
+            inputShape: [16],
+            units: 32,
+            activation: 'relu',
+            name: `dense_1_${Date.now()}`
+          }));
+          
+          newModel.add(tf.layers.dense({
+            units: 16,
+            activation: 'relu',
+            name: `dense_2_${Date.now()}`
+          }));
+          
+          newModel.add(tf.layers.dense({
+            units: 8,
+            activation: 'softmax',
+            name: `dense_3_${Date.now()}`
+          }));
+
+          newModel.compile({
+            optimizer: tf.train.adam(0.005),
+            loss: 'categoricalCrossentropy',
+            metrics: ['accuracy']
+          });
+
+          return newModel;
+        };
+        
+        const newModel = createModel();
+        setModel(newModel);
+        
+        const initialWeights = newModel.layers.map(layer => {
+          const weights = layer.getWeights()[0];
+          if (weights) {
+            return weights.arraySync();
+          }
+          return null;
+        }).filter(w => w !== null);
+        
+        setWeights(initialWeights);
+        setEpoch(0);
+        setAccuracy(0);
+        setCurrentProblems([]);
+        stopTrainingRef.current = false;
+        
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        await startTraining(newModel);
+      };
+
+      // Animation loop
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas || nodes.length === 0) return;
+
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const animate = () => {
+          ctx.clearRect(0, 0, width, height);
+
+          const updatedNodes = nodes.map(layer => 
+            layer.map(node => {
+              let newX = node.x + node.vx + (node.targetX - node.x) * 0.03;
+              let newY = node.y + node.vy + (node.targetY - node.y) * 0.03;
+              let newVx = node.vx + (Math.random() - 0.5) * 0.05;
+              let newVy = node.vy + (Math.random() - 0.5) * 0.05;
+              newVx *= 0.96;
+              newVy *= 0.96;
+              return { ...node, x: newX, y: newY, vx: newVx, vy: newVy };
+            })
+          );
+
+          setNodes(updatedNodes);
+
+          // Draw connections
+          for (let i = 0; i < updatedNodes.length - 1; i++) {
+            const currentLayer = updatedNodes[i];
+            const nextLayer = updatedNodes[i + 1];
+
+            currentLayer.forEach((node1, idx1) => {
+              nextLayer.forEach((node2, idx2) => {
+                let weightValue = 0;
+                if (weights[i] && weights[i][idx1] && weights[i][idx1][idx2] !== undefined) {
+                  weightValue = Math.abs(weights[i][idx1][idx2]);
+                }
+
+                const opacity = Math.min(weightValue * 0.8 + 0.05, 0.4);
+                const lineWidth = weightValue * 1.5 + 0.3;
+
+                ctx.beginPath();
+                ctx.moveTo(node1.x, node1.y);
+                ctx.lineTo(node2.x, node2.y);
+                ctx.strokeStyle = theme.linkColor.replace('OPACITY', opacity);
+                ctx.lineWidth = lineWidth;
+                ctx.stroke();
+              });
+            });
+          }
+
+          // Draw nodes
+          updatedNodes.forEach((layer) => {
+            layer.forEach(node => {
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, 3, 0, Math.PI * 2);
+              ctx.fillStyle = theme.nodeColor;
+              ctx.fill();
+            });
+          });
+
+          animationRef.current = requestAnimationFrame(animate);
+        };
+
+        animate();
+
+        return () => {
+          if (animationRef.current) {
+            cancelAnimationFrame(animationRef.current);
+          }
+        };
+      }, [nodes, weights, theme]);
+
+      return (
+        <div className={`relative min-h-screen bg-gradient-to-br ${theme.bg} transition-colors duration-1000`}>
+          {/* Time display */}
+          <div className="fixed top-4 right-4 z-50 text-right">
+            <div className={`text-2xl font-light ${theme.text} mb-1`}>{timeString}</div>
+            <div className={`text-sm ${theme.textSecondary}`}>{theme.name}</div>
+            <div className={`text-xs ${theme.textSecondary} opacity-70 mt-1`}>Theme adapts to time of day</div>
+          </div>
+
+          {/* Neural Network Background */}
+          <canvas
+            ref={canvasRef}
+            width={1200}
+            height={600}
+            className={`absolute top-0 left-0 w-full h-96 ${theme.name === 'Afternoon' ? 'opacity-40' : 'opacity-20'}`}
+          />
+
+          {/* Main Content */}
+          <div className="relative z-10 max-w-3xl mx-auto px-6 py-16">
+            {/* Header */}
+            <div className="mb-12">
+              <h1 className={`text-5xl font-light ${theme.text} mb-6`}>
+                {PROFILE.name}
+              </h1>
+              <p className={`text-lg ${theme.textSecondary} leading-relaxed mb-8`}>
+                {PROFILE.bio}
+              </p>
+              
+              <div className="flex gap-4 items-center mb-8 flex-wrap">
+                {!training && epoch === 0 && (
+                  <button
+                    onClick={trainModel}
+                    className={`px-6 py-2 border-2 ${theme.btn} font-medium transition-all`}
+                  >
+                    Train Network
+                  </button>
+                )}
+                {training && (
+                  <>
+                    <button
+                      onClick={stopTraining}
+                      className={`px-6 py-2 border-2 ${theme.btnSecondary} font-medium transition-all`}
+                    >
+                      Stop Training
+                    </button>
+                    <span className={theme.textSecondary}>Epoch: {epoch}/500 • Accuracy: {accuracy.toFixed(1)}%</span>
+                  </>
+                )}
+                {!training && epoch > 0 && (
+                  <button
+                    onClick={resetAndTrain}
+                    className={`px-6 py-2 border-2 ${theme.btn} font-medium transition-all`}
+                  >
+                    Reset and Train Again
+                  </button>
+                )}
+              </div>
+
+              {/* Current Problems Display */}
+              {currentProblems.length > 0 && (
+                <div className={`mb-8 p-4 border ${theme.problemBox}`}>
+                  <p className={`text-sm ${theme.textSecondary} mb-2`}>Learning: a × b ≡ c (mod 8)</p>
+                  <div className="grid grid-cols-4 gap-2 text-sm font-mono">
+                    {currentProblems.map((prob, idx) => (
+                      <div key={idx} className={theme.textSecondary}>
+                        {prob.a} × {prob.b} = {prob.result}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Papers Section */}
+            <div className={`border-t ${theme.border} pt-12`}>
+              <h2 className={`text-2xl font-light ${theme.text} mb-8`}>Papers</h2>
+              
+              <div>
+                {paperYears.map((year, yearIdx) => (
+                  <div key={year}>
+                    {papersByYear[year].map((item, idx) => (
+                      <div key={idx} className="group relative flex justify-between items-start gap-8 mb-8">
+                        <div className="flex-1">
+                          <a href={item.link} className="block">
+                            <h3 className={`text-xl font-medium ${theme.text} ${theme.hoverText} transition-colors mb-2`}>
+                              {item.title}
+                            </h3>
+                            <p className={`${theme.textSecondary} leading-relaxed`}>
+                              {item.description}
+                            </p>
+                          </a>
+                        </div>
+                        
+                        <div className="flex items-start gap-4 flex-shrink-0 relative">
+                          <div className="relative">
+                            <div className={`w-2 h-2 rounded-full ${theme.dot} transition-colors relative z-10`}></div>
+                            {!(yearIdx === paperYears.length - 1 && idx === papersByYear[year].length - 1) && (
+                              <div className={`absolute left-1/2 top-2 w-px ${theme.line} -translate-x-1/2`} style={{ height: '4rem' }}></div>
+                            )}
+                          </div>
+                          <div className="w-12">
+                            {idx === 0 && <span className={`text-sm ${theme.textSecondary} font-medium`}>{year}</span>}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Experience Section */}
+            <div className={`border-t ${theme.border} pt-12 mt-12`}>
+              <h2 className={`text-2xl font-light ${theme.text} mb-8`}>Experience</h2>
+              
+              <div>
+                {experienceYears.map((year, yearIdx) => (
+                  <div key={year}>
+                    {experienceByYear[year].map((item, idx) => (
+                      <div key={idx} className="group relative flex justify-between items-start gap-8 mb-8">
+                        <div className="flex-1">
+                          <a href={item.link} className="block">
+                            <div className="flex items-baseline gap-3 mb-2 flex-wrap">
+                              <h3 className={`text-xl font-medium ${theme.text} ${theme.hoverText} transition-colors`}>
+                                {item.title}
+                              </h3>
+                              {item.category && (
+                                <span className={`text-xs font-medium px-2 py-1 ${theme.tag} rounded`}>
+                                  {item.category}
+                                </span>
+                              )}
+                            </div>
+                            <p className={`${theme.textSecondary} leading-relaxed`}>
+                              {item.description}
+                            </p>
+                          </a>
+                        </div>
+                        
+                        <div className="flex items-start gap-4 flex-shrink-0 relative">
+                          <div className="relative">
+                            <div className={`w-2 h-2 rounded-full ${theme.dot} transition-colors relative z-10`}></div>
+                            {!(yearIdx === experienceYears.length - 1 && idx === experienceByYear[year].length - 1) && (
+                              <div className={`absolute left-1/2 top-2 w-px ${theme.line} -translate-x-1/2`} style={{ height: '4rem' }}></div>
+                            )}
+                          </div>
+                          <div className="w-16">
+                            {idx === 0 && (
+                              <span className={`text-sm ${theme.textSecondary} font-medium whitespace-nowrap`}>
+                                {item.startYear}-{item.endYear}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Projects Section */}
+            <div className={`border-t ${theme.border} pt-12 mt-12`}>
+              <h2 className={`text-2xl font-light ${theme.text} mb-8`}>Projects</h2>
+              
+              <div>
+                {projectYears.map((year, yearIdx) => (
+                  <div key={year}>
+                    {projectsByYear[year].map((item, idx) => (
+                      <div key={idx} className="group relative flex justify-between items-start gap-8 mb-8">
+                        <div className="flex-1">
+                          <a href={item.link} className="block">
+                            <h3 className={`text-xl font-medium ${theme.text} ${theme.hoverText} transition-colors mb-2`}>
+                              {item.title}
+                            </h3>
+                            <p className={`${theme.textSecondary} leading-relaxed`}>
+                              {item.description}
+                            </p>
+                          </a>
+                        </div>
+                        
+                        <div className="flex items-start gap-4 flex-shrink-0 relative">
+                          <div className="relative">
+                            <div className={`w-2 h-2 rounded-full ${theme.dot} transition-colors relative z-10`}></div>
+                            {!(yearIdx === projectYears.length - 1 && idx === projectsByYear[year].length - 1) && (
+                              <div className={`absolute left-1/2 top-2 w-px ${theme.line} -translate-x-1/2`} style={{ height: '4rem' }}></div>
+                            )}
+                          </div>
+                          <div className="w-12">
+                            {idx === 0 && <span className={`text-sm ${theme.textSecondary} font-medium`}>{year}</span>}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className={`mt-16 pt-8 border-t ${theme.border}`}>
+              <div className="flex justify-between items-center flex-wrap gap-4">
+                <div className="flex gap-6 text-sm flex-wrap">
+                  <a href={`mailto:${PROFILE.email}`} className={`${theme.link} transition-colors`}>
+                    Email
+                  </a>
+                  <a href={PROFILE.github} className={`${theme.link} transition-colors`}>
+                    GitHub
+                  </a>
+                  <a href={PROFILE.emacsConfig} className={`${theme.link} transition-colors`}>
+                    Emacs Config
+                  </a>
+                  <a href={PROFILE.resume} className={`${theme.link} transition-colors`}>
+                    Resume
+                  </a>
+                </div>
+                <div className={`text-sm ${theme.textSecondary} italic`}>
+                  ✨ Vibe coded with Claude
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // Render the app
+    ReactDOM.createRoot(document.getElementById('root')).render(<MinimalistPortfolio />);
+  </script>
+</body>
 </html>
