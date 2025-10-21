@@ -1,0 +1,220 @@
+%-------------------------
+% Resume in LaTeX
+% Author : Jackson Harmon
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage[T1]{fontenc}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Jackson Harmon} \\ \vspace{1pt}
+    \textbf{\large Machine Learning Scientist} \\ \vspace{5pt}
+    \small \faEnvelope\ \href{mailto:jackson.harmon12@gmail.com}{jackson.harmon12@gmail.com} $|$ 
+    \faGithub\ \href{https://github.com/shs2017}{github.com/shs2017} $|$
+    \faLink\ \href{https://shs2017.github.io}{shs2017.github.io}
+\end{center}
+
+
+%-----------PROFILE-----------
+\section{Profile}
+I'm a master's student studying at the University of Tübingen, interested in developing the next generation of machine learning models. My research focuses on understanding continual learning and how post-training processes affect pretrained knowledge in large language models.
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of Tübingen}{Tübingen, Germany}
+      {Master of Science in Machine Learning}{2023 -- Present}
+      
+    \resumeSubheading
+      {Georgia Institute of Technology}{Atlanta, GA}
+      {Bachelor of Science in Computer Science, Highest Honors}{2017 -- 2021}
+      \resumeItemListStart
+        \resumeItem{Specializations: Machine Learning and Theory}
+      \resumeItemListEnd
+      
+    \resumeSubheading
+      {Ludwig Maximilian University of Munich}{Munich, Germany}
+      {Study Abroad - Informatik}{2019 -- 2020}
+  \resumeSubHeadingListEnd
+
+
+%-----------RESEARCH-----------
+\section{Research \& Publications}
+  \resumeSubHeadingListStart
+    \resumeProjectHeading
+      {\textbf{Mapping Post-Training Forgetting in Language Models at Scale}}{2025}
+      \resumeItemListStart
+        \resumeItem{Research quantifying how post-training alters pretrained knowledge in LMs through sample-wise forgetting metrics}
+        \resumeItem{Demonstrated that domain-continual pretraining induces moderate forgetting}
+        \resumeItem{Showed RL/SFT yields moderate-to-large backward transfer on math and logic tasks}
+        \resumeItem{Found that model merging doesn't reliably mitigate forgetting}
+        \resumeItem{Project website: \href{https://post-forget.github.io/}{post-forget.github.io}}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Software Engineer}{2021 -- 2023}
+      {NCR Corporation}{Atlanta, GA}
+      \resumeItemListStart
+        \resumeItem{Code-owner of Java and Go microservices deployed across companies worldwide}
+        \resumeItem{Led inter-team and customer-facing weekly meetings to coordinate feature development}
+        \resumeItem{Implemented scalable production backend services}
+      \resumeItemListEnd
+      
+    \resumeSubheading
+      {Data Scientist Intern}{2018}
+      {Hawque}{Atlanta, GA (Remote)}
+      \resumeItemListStart
+        \resumeItem{Developed a facial recognition system with a remote international team}
+        \resumeItem{Implemented user-item collaborative filtering to match users and providers based on preferences and history}
+        \resumeItem{Presented and demonstrated results to stakeholders}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Engineering Intern}{2016}
+      {Perceptive Solutions}{Greenville, SC}
+      \resumeItemListStart
+        \resumeItem{Developed a framework for modeling interactions between various magnets}
+        \resumeItem{Wrote a data extrapolation and visualization program compatible with the modeling framework}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+%-----------PROJECTS-----------
+\section{Selected Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{ML Models \& Algorithms Implementation} $|$ \emph{Python, NumPy, PyTorch}}{2024}
+          \resumeItemListStart
+            \resumeItem{On-going collection of machine learning models and algorithms implemented from scratch for learning}
+            \resumeItem{Includes neural networks, optimization algorithms, and probabilistic models}
+          \resumeItemListEnd
+          
+      \resumeProjectHeading
+          {\textbf{Physics-Informed Machine Learning} $|$ \emph{Python, PyTorch}}{2024}
+          \resumeItemListStart
+            \resumeItem{Course project exploring physics-informed neural networks (PINNs)}
+            \resumeItem{Applied PINNs to solving differential equations with physical constraints}
+          \resumeItemListEnd
+          
+      \resumeProjectHeading
+          {\textbf{Petri Dish Colony Counter} $|$ \emph{Python, TensorFlow, OpenCV}}{2020}
+          \resumeItemListStart
+            \resumeItem{Combined CNN with KMeans clustering and boosting to predict colony count on petri dishes}
+            \resumeItem{Developed image generator and preprocessor for training data augmentation}
+          \resumeItemListEnd
+          
+      \resumeProjectHeading
+          {\textbf{HarmonsOS - Hobby Operating System} $|$ \emph{x86 Assembly, C}}{2013}
+          \resumeItemListStart
+            \resumeItem{16-bit to 32-bit operating system with bootloader, command line, and hard drive support}
+            \resumeItem{Implemented memory management, file system, and interrupt handling from scratch}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: Python, C++, Java, Go, CUDA, Bash, x86 Assembly, SQL, JavaScript} \\
+     \textbf{ML/AI Frameworks}{: PyTorch, TensorFlow, NumPy, scikit-learn, Hugging Face Transformers} \\
+     \textbf{Tools \& Platforms}{: Git, Emacs, Weights \& Biases, Docker, Linux, AWS, LaTeX} \\
+     \textbf{Other Skills}{: German (B2 level)}
+    }}
+ \end{itemize}
+
+
+%-------------------------------------------
+\end{document}
