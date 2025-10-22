@@ -23,7 +23,7 @@
 
     const PROFILE = {
       name: "Jackson Harmon",
-      bio: "I'm a machine learning master's student at University of Tübingen, interested in developing the next generation of machine learning models. Feel free to reach out if you are interested in collaborating or chatting.",
+      bio: "I'm a machine learning master's student at University of Tübingen, interested in developing the next generation of machine learning models. My main research interests include Large Language Models, Continual Learning, and Robotics. Feel free to reach out if you are interested in collaborating or chatting.",
       email: "jackson.harmon@student.uni-tuebingen.de",
       github: "https://github.com/shs2017",
       emacsConfig: "https://github.com/shs2017/EmacsConfig",
@@ -110,6 +110,13 @@
         link: "https://github.com/shs2017/physics-informed-machine-learning"
       },
       {
+        title: "Deep Learning Research Kitchen",
+        description: "Research project predicting scaling laws for language models, investigating Kaplan and Chinchilla scaling law behaviors and their implications for model training efficiency",
+        year: "2024",
+        link: "https://github.com/shs2017/DLResearchKitchen"
+      },
+
+      {
         title: "Petri Dish Colony Counter",
         description: "Combined CNN with KMeans and boosting to predict colony count on petri dishes. Developed image generator and preprocessor for training",
         year: "2020",
@@ -138,6 +145,12 @@
         description: "16-bit to 32-bit operating system with bootloader, command line, and hard drive support. Written in x86 assembly and C",
         year: "2013",
         link: "https://github.com/shs2017/HarmonsOS"
+      },
+      {
+        title: "Video Games",
+        description: "A collection of early programming projects from elementary and middle school, including several school assignments and personal explorations. These Unity 3D games showcase foundational game development skills and creative problem-solving during formative years of learning to code",
+        year: "2012",
+        link: "https://drive.google.com/drive/folders/0B5Ga8Lu2vLsCOXJxa2czRm5oQms?usp=sharing"
       }
     ];
 
@@ -625,6 +638,19 @@
                 {PROFILE.bio}
               </p>
               
+              <div className="flex gap-6 mb-8 text-sm">
+                <a href={PROFILE.github} target="_blank" rel="noopener noreferrer" className={`${theme.link} transition-colors font-medium`}>
+                  GitHub
+                </a>
+                <a href={PROFILE.resume} target="_blank" rel="noopener noreferrer" className={`${theme.link} transition-colors font-medium`}>
+                  Resume
+                </a>
+                <a href={`mailto:${PROFILE.email}`} className={`${theme.link} transition-colors font-medium`}>
+                  Email
+                </a>
+              </div>
+
+              
               <div className="flex gap-4 items-center mb-8 flex-wrap">
                 {!training && epoch === 0 && (
                   <button
@@ -799,17 +825,8 @@
             <div className={`mt-16 pt-8 border-t ${theme.border}`}>
               <div className="flex justify-between items-center flex-wrap gap-4">
                 <div className="flex gap-6 text-sm flex-wrap">
-                  <a href={`mailto:${PROFILE.email}`} className={`${theme.link} transition-colors`}>
-                    Email
-                  </a>
-                  <a href={PROFILE.github} className={`${theme.link} transition-colors`}>
-                    GitHub
-                  </a>
                   <a href={PROFILE.emacsConfig} className={`${theme.link} transition-colors`}>
                     Emacs Config
-                  </a>
-                  <a href={PROFILE.resume} className={`${theme.link} transition-colors`}>
-                    Resume
                   </a>
                 </div>
                 <div className={`text-sm ${theme.textSecondary} italic`}>
