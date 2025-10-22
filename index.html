@@ -47,7 +47,8 @@
         endYear: "present",
         year: "2023",
         category: "",
-        link: "#masters"
+        type: "Education",
+        link: "https://uni-tuebingen.de/en/study/finding-a-course/degree-programs-available/detail/course/machine-learning-master/"
       },
       {
         title: "NCR",
@@ -56,6 +57,7 @@
         endYear: "2023",
         year: "2023",
         category: "Software Engineer",
+        type: "Work Experience",
         link: "#ncr"
       },
       {
@@ -65,16 +67,18 @@
         endYear: "2021",
         year: "2021",
         category: "Highest Honors",
-        link: "#gatech"
+        type: "Education",
+        link: "https://catalog.gatech.edu/programs/computer-science-bs/"
       },
       {
         title: "Ludwig Maximilian University of Munich",
-        description: "Computer Science studies",
+        description: "Institut für Informatik",
         startYear: "2019",
         endYear: "2020",
         year: "2019",
         category: "Study Abroad",
-        link: "#lmu"
+        type: "Education",
+        link: "https://www.ifi.lmu.de/index.html"
       },
       {
         title: "Hawque",
@@ -82,7 +86,8 @@
         startYear: "2018",
         endYear: "2018",
         year: "2018",
-        category: "Data Scientist Intern",
+        category: "Machine Learning Intern",
+        type: "Work Experience",
         link: "https://www.hawque.com/"
       },
       {
@@ -92,6 +97,7 @@
         endYear: "2016",
         year: "2016",
         category: "Intern",
+        type: "Work Experience",
         link: "#perceptive"
       }
     ];
@@ -167,6 +173,7 @@
       const [currentProblems, setCurrentProblems] = useState([]);
       const [weights, setWeights] = useState([]);
       const [currentTime, setCurrentTime] = useState(new Date());
+      const [selectedCategories, setSelectedCategories] = useState(['Papers', 'Education', 'Work Experience', 'Projects']);
       const animationRef = useRef(null);
       const stopTrainingRef = useRef(false);
       const modelCreated = useRef(false);
@@ -174,28 +181,36 @@
       const architecture = [16, 32, 16, 8];
       const [nodes, setNodes] = useState([]);
 
-      // Group data by year
-      const papersByYear = PAPERS.reduce((acc, paper) => {
-        if (!acc[paper.year]) acc[paper.year] = [];
-        acc[paper.year].push(paper);
+      // Unified timeline data with categories
+      const allTimelineItems = [
+        ...PAPERS.map(item => ({ ...item, mainCategory: 'Papers', displayYear: item.year })),
+        ...EXPERIENCE.map(item => ({ ...item, mainCategory: item.type, displayYear: item.startYear, subCategory: item.category })),
+        ...PROJECTS.map(item => ({ ...item, mainCategory: 'Projects', displayYear: item.year }))
+      ];
+
+      // Filter items based on selected categories
+      const filteredItems = allTimelineItems.filter(item => 
+        selectedCategories.includes(item.mainCategory)
+      );
+
+      // Group filtered items by year
+      const itemsByYear = filteredItems.reduce((acc, item) => {
+        if (!acc[item.displayYear]) acc[item.displayYear] = [];
+        acc[item.displayYear].push(item);
         return acc;
       }, {});
 
-      const experienceByYear = EXPERIENCE.reduce((acc, exp) => {
-        if (!acc[exp.year]) acc[exp.year] = [];
-        acc[exp.year].push(exp);
-        return acc;
-      }, {});
+      const timelineYears = Object.keys(itemsByYear).sort((a, b) => b - a);
 
-      const projectsByYear = PROJECTS.reduce((acc, proj) => {
-        if (!acc[proj.year]) acc[proj.year] = [];
-        acc[proj.year].push(proj);
-        return acc;
-      }, {});
+      // Toggle category filter
+      const toggleCategory = (category) => {
+        setSelectedCategories(prev => 
+          prev.includes(category)
+            ? prev.filter(c => c !== category)
+            : [...prev, category]
+        );
+      };
 
-      const paperYears = Object.keys(papersByYear).sort((a, b) => b - a);
-      const experienceYears = Object.keys(experienceByYear).sort((a, b) => b - a);
-      const projectYears = Object.keys(projectsByYear).sort((a, b) => b - a);
 
       // Update time every minute
       useEffect(() => {
@@ -696,62 +711,46 @@
               )}
             </div>
 
-            {/* Papers Section */}
+            {/* Unified Timeline Section */}
             <div className={`border-t ${theme.border} pt-12`}>
-              <h2 className={`text-2xl font-light ${theme.text} mb-8`}>Papers</h2>
-              
-              <div>
-                {paperYears.map((year, yearIdx) => (
-                  <div key={year}>
-                    {papersByYear[year].map((item, idx) => (
-                      <div key={idx} className="group relative flex justify-between items-start gap-8 mb-8">
-                        <div className="flex-1">
-                          <a href={item.link} className="block">
-                            <h3 className={`text-xl font-medium ${theme.text} ${theme.hoverText} transition-colors mb-2`}>
-                              {item.title}
-                            </h3>
-                            <p className={`${theme.textSecondary} leading-relaxed`}>
-                              {item.description}
-                            </p>
-                          </a>
-                        </div>
-                        
-                        <div className="flex items-start gap-4 flex-shrink-0 relative">
-                          <div className="relative">
-                            <div className={`w-2 h-2 rounded-full ${theme.dot} transition-colors relative z-10`}></div>
-                            {!(yearIdx === paperYears.length - 1 && idx === papersByYear[year].length - 1) && (
-                              <div className={`absolute left-1/2 top-2 w-px ${theme.line} -translate-x-1/2`} style={{ height: '4rem' }}></div>
-                            )}
-                          </div>
-                          <div className="w-12">
-                            {idx === 0 && <span className={`text-sm ${theme.textSecondary} font-medium`}>{year}</span>}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
+              <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
+                <h2 className={`text-2xl font-light ${theme.text}`}>Timeline</h2>
+                
+                {/* Category Filters */}
+                <div className="flex gap-3 flex-wrap">
+                  {['Papers', 'Education', 'Work Experience', 'Projects'].map(category => (
+                    <button
+                      key={category}
+                      onClick={() => toggleCategory(category)}
+                      className={`px-4 py-2 text-sm rounded transition-all ${
+                        selectedCategories.includes(category)
+                          ? `${theme.btn} font-medium`
+                          : `border ${theme.border} ${theme.textSecondary} opacity-50`
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-
-            {/* Experience Section */}
-            <div className={`border-t ${theme.border} pt-12 mt-12`}>
-              <h2 className={`text-2xl font-light ${theme.text} mb-8`}>Experience</h2>
               
               <div>
-                {experienceYears.map((year, yearIdx) => (
+                {timelineYears.map((year, yearIdx) => (
                   <div key={year}>
-                    {experienceByYear[year].map((item, idx) => (
-                      <div key={idx} className="group relative flex justify-between items-start gap-8 mb-8">
+                    {itemsByYear[year].map((item, idx) => (
+                      <div key={`${item.mainCategory}-${idx}`} className="group relative flex justify-between items-start gap-8 mb-8">
                         <div className="flex-1">
                           <a href={item.link} className="block">
                             <div className="flex items-baseline gap-3 mb-2 flex-wrap">
                               <h3 className={`text-xl font-medium ${theme.text} ${theme.hoverText} transition-colors`}>
                                 {item.title}
                               </h3>
-                              {item.category && (
-                                <span className={`text-xs font-medium px-2 py-1 ${theme.tag} rounded`}>
-                                  {item.category}
+                              <span className={`text-xs font-medium px-2 py-1 ${theme.tag} rounded`}>
+                                {item.mainCategory}
+                              </span>
+                              {(item.mainCategory === 'Education' || item.mainCategory === 'Work Experience') && item.subCategory && (
+                                <span className={`text-xs font-medium px-2 py-1 ${theme.tag} rounded opacity-70`}>
+                                  {item.subCategory}
                                 </span>
                               )}
                             </div>
@@ -764,54 +763,16 @@
                         <div className="flex items-start gap-4 flex-shrink-0 relative">
                           <div className="relative">
                             <div className={`w-2 h-2 rounded-full ${theme.dot} transition-colors relative z-10`}></div>
-                            {!(yearIdx === experienceYears.length - 1 && idx === experienceByYear[year].length - 1) && (
+                            {!(yearIdx === timelineYears.length - 1 && idx === itemsByYear[year].length - 1) && (
                               <div className={`absolute left-1/2 top-2 w-px ${theme.line} -translate-x-1/2`} style={{ height: '4rem' }}></div>
                             )}
                           </div>
                           <div className="w-16">
                             {idx === 0 && (
                               <span className={`text-sm ${theme.textSecondary} font-medium whitespace-nowrap`}>
-                                {item.startYear}-{item.endYear}
+                                {item.startYear && item.endYear ? `${item.startYear}-${item.endYear}` : year}
                               </span>
                             )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Projects Section */}
-            <div className={`border-t ${theme.border} pt-12 mt-12`}>
-              <h2 className={`text-2xl font-light ${theme.text} mb-8`}>Projects</h2>
-              
-              <div>
-                {projectYears.map((year, yearIdx) => (
-                  <div key={year}>
-                    {projectsByYear[year].map((item, idx) => (
-                      <div key={idx} className="group relative flex justify-between items-start gap-8 mb-8">
-                        <div className="flex-1">
-                          <a href={item.link} className="block">
-                            <h3 className={`text-xl font-medium ${theme.text} ${theme.hoverText} transition-colors mb-2`}>
-                              {item.title}
-                            </h3>
-                            <p className={`${theme.textSecondary} leading-relaxed`}>
-                              {item.description}
-                            </p>
-                          </a>
-                        </div>
-                        
-                        <div className="flex items-start gap-4 flex-shrink-0 relative">
-                          <div className="relative">
-                            <div className={`w-2 h-2 rounded-full ${theme.dot} transition-colors relative z-10`}></div>
-                            {!(yearIdx === projectYears.length - 1 && idx === projectsByYear[year].length - 1) && (
-                              <div className={`absolute left-1/2 top-2 w-px ${theme.line} -translate-x-1/2`} style={{ height: '4rem' }}></div>
-                            )}
-                          </div>
-                          <div className="w-12">
-                            {idx === 0 && <span className={`text-sm ${theme.textSecondary} font-medium`}>{year}</span>}
                           </div>
                         </div>
                       </div>
